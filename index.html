@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+		<meta name="format-detection" content="telephone=no,email=no">
+		<meta http-equiv="X-UA-Compatible" content="ie=Edge,chrome=1.0">
+		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="base/swiper-3.3.1.min.css" />
+		<link rel="stylesheet" href="tubiao/tubiao.css" />
+		
+		<script src="base/iscroll4.js"></script>
+		<script src="base/swiper-3.3.1.min.js"></script>
+		<title></title>
+	</head>
+	<body>
+		<div class="box">
+			<div class="header">
+				 <span>返回</span>
+				 <h3>育婴宝典</h3>
+				 <span>收藏</span>
+			</div>
+			<div class="main">
+				<div class="big swiper-container" >
+					<div class="swiper-wrapper">
+						<div class="slide swiper-slide" id="big1">
+							<div class="slide-dad"></div>
+						</div>
+						<div class="slide swiper-slide">
+							2
+						</div>
+						<div class="slide swiper-slide">
+							3
+						</div>
+						<div class="slide swiper-slide">
+							4
+						</div>
+					</div>
+				</div>
+				<div class="large" id="large">				  
+						<div class="large-dad"></div>					
+				</div>
+				<div class="large1" id="large1">				  
+						<div class="large1-dad"></div>					
+				</div>
+			</div>
+			<div class="footer">
+				<li>首页<small>shou</small></li>
+				<li>收藏<small>souc</small></li>
+				<li>搜索<small>sous</small></li>
+				<li>宝宝<small>baob</small></li>
+				<div class="zzc">
+					
+				</div>
+			</div>
+		</div>
+		<script>
+			var a;
+			var footer=document.querySelector(".footer"),
+			    big=document.querySelector(".big"),
+			    slides=big.querySelectorAll(".slide"),
+			    lis=footer.querySelectorAll("li");
+			var large=document.querySelector(".large"),
+			    largeID=document.querySelector("#large"),
+			    large1=document.querySelector(".large1-dad"),
+			    large1ID=document.querySelector(".large1");
+			var zzc=footer.querySelector(".zzc");
+			    for(let i=0;i<lis.length;i++){
+			    	lis[i].addEventListener("click",function(){
+			    		wrp.slideTo(i); 
+			    		zzc.style.transform="translate("+100*i+"%)";
+			    	})
+			    }
+			
+		var wrp=new Swiper(".big",{
+				"onTransitionEnd":function(){
+					var index=wrp.activeIndex;
+					
+					zzc.style.transform="translate("+100*index+"%)";					
+				}			
+			}) 
+				
+		    ajax("data/data.json",redy);
+			
+			function ajax(url,callback){
+				 var xhr=new XMLHttpRequest();
+				 var data=null;
+				     xhr.open("get","data/data.json",true);
+				     xhr.send(null);
+				     xhr.onreadystatechange=function(){
+				     	if(xhr.readyState==4&&xhr.status==200){
+				     		callback&&callback(JSON.parse(xhr.responseText));
+				     	}			     	  
+				     }
+			}
+			
+			function redy(dat){
+				   var data=dat;
+				   var str="";
+				   for(let k in data){
+				   	   str+=`<img src=img/${data[k].pic} data-ks=${k}>`;
+				   }
+				   slides[0].querySelector(".slide-dad").innerHTML=str;
+				  aa(data);
+				  
+				   var scr=new iScroll("big1")
+			}
+			
+		    function aa(as){
+		    	console.log(as);
+		    	var tar,
+		    	    ks;
+		    	  slides[0].addEventListener("click",function(e){
+		    	  	tar=e.target;
+		    	  	if(tar.tagName==="IMG"){
+		    	  		large.style.transform="translate(-100%)";
+				        big.style.transform="translate(-100%)";
+				            ks=tar.getAttribute("data-ks"),
+				            str="";
+				        console.log(ks);
+				        for(let a in as[ks].fenlei){
+				  	        str+=`<dl>
+				  	                <dt><img src=img/tu/${as[ks].fenlei[a]["img"]}/></dt>
+				  	                <dd><h4>${as[ks].fenlei[a]["title"]}</h4></dd>
+				  	              </dl>`;
+				        }
+				        large.querySelector(".large-dad").innerHTML=str; 
+				        var scr=new iScroll("large");
+				        scr.refresh();
+				        xuanRan();
+		    	  	}
+			    })
+		    	  
+		    	  function xuanRan(){//渲染内容
+				    	var lgList=large.querySelectorAll("dl");
+				    	console.log(lgList);
+				    	for(let i=0;i<lgList.length;i++){
+				    		  lgList[i].addEventListener("click",function(e){
+				    		  	     large1.innerHTML=as[ks].fenlei[i]["content"];
+				    		  	     large1ID.style.transform="translate(-200%)";				    		  	                         var scr2=new iScroll("large1");
+				    		  })
+				    		  
+				    	}
+				    	
+		    	  }
+		    	
+		    	  
+		    }
+		    
+		</script>
+	</body>
+</html>
